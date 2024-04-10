@@ -3,15 +3,15 @@ import React from "react";
 import { ServerHTRText } from "@/components/serverHTR";
 
 export default async function KotoList() {
-  const list = await db.query.kotobasWords.findMany({ limit: 10 });
+  const list = (await db.query.kotobasWords.findMany({ limit: 10 })).reverse();
 
   return (
-    <>
+    <div className="max-h-screen overflow-hidden">
       {list?.map((w) => {
         return (
           <div
             key={`${w.lang}_${w.word}`}
-            className="border-b-[1px] border-gray-300"
+            className="overflow-hidden border-b-[1px] border-gray-300"
           >
             <h1
               className={`mx-[auto] mt-2 w-fit border-b-2 border-dotted px-5 text-center text-[2rem]`}
@@ -45,6 +45,6 @@ export default async function KotoList() {
           </div>
         );
       })}
-    </>
+    </div>
   );
 }

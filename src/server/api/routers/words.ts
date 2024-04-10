@@ -4,6 +4,8 @@ import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
 
 import { kotobasWords } from "@/server/db/schema";
 import parse from "node-html-parser";
+import { env } from "@/env";
+import { fetchDirectly, fetchFromProxy } from "@/utils";
 
 const DictionaryEntry = z.object({
   word: z.string(),
@@ -14,16 +16,18 @@ const DictionaryEntry = z.object({
 
 type DictionaryEntry = z.infer<typeof DictionaryEntry>;
 
+const fetchURL = async (url: string) =>
+  env.IS_REMOTE === "false"
+    ? await fetchDirectly(url)
+    : await fetchFromProxy(url);
+
 const parseJisho = async (
   keyword: string,
   page = 1,
 ): Promise<DictionaryEntry[]> => {
   const url = `https://jisho.org/search/${encodeURIComponent(keyword)}?page=${page}`;
-  const site = await fetch(url);
 
-  if (!site.ok) return void console.error("Jisho not OK"), [];
-
-  const text = await site.text();
+  const text = await fetchURL(url);
 
   if (!text) return void console.error("JishoText not OK"), [];
 
@@ -154,7 +158,24 @@ export const wordRouter = createTRPCRouter({
     .input(z.object({ jisho: z.boolean(), keyword: z.string() }))
     .query(async ({ input: { jisho, keyword } }) => {
       console.log("SCRAPPING");
-      return jisho ? await parseJisho(keyword) : await parseWeblio(keyword);
+      const words = jisho
+        ? await parseJisho(keyword)
+        : await parseWeblio(keyword);
+
+      const wordSet: typeof words = [];
+
+      for (const word of words) {
+        const alreadyIn = wordSet.find(
+          (w) => w.word === word.word && w.lang === word.lang,
+        );
+        if (alreadyIn) {
+          alreadyIn.meanings = [...alreadyIn.meanings, ...word.meanings];
+        } else {
+          wordSet.push(word);
+        }
+      }
+
+      return wordSet;
     }),
   addWord: publicProcedure
     .input(DictionaryEntry)
@@ -162,5 +183,6 @@ export const wordRouter = createTRPCRouter({
       await ctx.db
         .insert(kotobasWords)
         .values({ lang: lang, word: word, meanings: meanings });
+      return "OK";
     }),
 });

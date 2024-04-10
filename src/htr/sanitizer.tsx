@@ -58,7 +58,7 @@ export class SanitizedText {
     });
   }
   deRubify(r: ReactNode[]): ReactNode[] {
-    const deRuby = replace(r, /\[r]([\s\S]*?)\[\/r]/g, (q) => {
+    const deRuby = replace(r, /\[r]([\s\S]*?)\[\/r]/g, (q, i) => {
       const noRB = replace(q, /\[rb]([\s\S]*?)\[\/rb]/g, (m) => {
         return m;
       });
@@ -71,7 +71,7 @@ export class SanitizedText {
         return <rp key={m}>{m}</rp>;
       });
 
-      return <ruby key={q}>{...rp}</ruby>;
+      return <ruby key={`${q}_${i}`}>{...rp}</ruby>;
     });
 
     return deRuby;

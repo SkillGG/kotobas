@@ -34,6 +34,12 @@ export default function KotoAdd() {
           type="text"
           className="rounded-l-lg bg-slate-300 py-1 pl-2 text-black outline-none"
           ref={searchBoxRef}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              const val = searchBoxRef.current?.value;
+              if (val) showSearch(val);
+            }
+          }}
         />
         <button
           className="rounded-r-lg bg-slate-300 px-2 py-1 text-black"

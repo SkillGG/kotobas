@@ -7,7 +7,7 @@ export const env = createEnv({
    * isn't built with invalid env vars.
    */
   server: {
-    DB_URL: z.string().url(),
+    DATABASE_URL: z.string().url(),
     GCLOUD_FETCH: z.string().url(),
     GCLOUD_KEY: z.string(),
     IS_REMOTE: z.literal("true").or(z.literal("false")),
@@ -30,7 +30,7 @@ export const env = createEnv({
    * middlewares) or client-side so we need to destruct manually.
    */
   runtimeEnv: {
-    DB_URL: process.env.DB_URL,
+    DATABASE_URL: process.env.DATABASE_URL,
     GCLOUD_FETCH: process.env.GCLOUD_FETCH,
     GCLOUD_KEY: process.env.GCLOUD_KEY,
     IS_REMOTE: process.env.IS_REMOTE,
