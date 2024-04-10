@@ -1,0 +1,53 @@
+{
+    "$schema": "https://cdn.statically.io/gh/nguyenngoclongdev/cdn/main/schema/v10/terminal-keeper.json",
+    "theme": "dice",
+    "active": "kotobas",
+    "activateOnStartup": true,
+    "keepExistingTerminals": false,
+    "noClear": true,
+    "sessions": {
+        "default": [
+            {
+                "name": "main",
+                "autoExecuteCommands": false,
+                "icon": "person",
+                "commands": [
+                    ""
+                ]
+            }
+        ],
+        "kotobas": [
+            {
+                "name": "drizzle",
+                "autoExecuteCommands": true,
+                "icon": "database",
+                "color": "terminal.ansiBrightYellow",
+                "commands": [
+                    "npx drizzle-kit studio --port 5666"
+                ],
+                "joinOperator": ";"
+            },
+            [
+                {
+                    "name": "git",
+                    "autoExecuteCommands": true,
+                    "icon": "git-commit",
+                    "color": "terminal.ansiBrightBlue",
+                    "commands": [
+                        "cd kotobas"
+                    ],
+                    "focus": false
+                },
+                {
+                    "name": "dev",
+                    "autoExecuteCommands": true,
+                    "icon": "debug-alt",
+                    "joinOperator": ";",
+                    "commands": [
+                        "npm run dev"
+                    ]
+                }
+            ]
+        ]
+    }
+}

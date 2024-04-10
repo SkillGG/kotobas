@@ -1,0 +1,11 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  @apply leading-[normal];
+}
+
+body {
+  @apply m-0 h-[99vh] bg-gray-800 p-0 text-white;
+}
