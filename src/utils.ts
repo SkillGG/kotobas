@@ -40,7 +40,6 @@ export const fetchFromProxy = async (url: string) => {
     headers: { Authorization: `bearer ${env.GCLOUD_KEY}` },
     body: JSON.stringify({ url }),
   });
-  console.log(res);
   if (!res.ok) {
     throw "Fetching data unsuccessful";
   }
