@@ -23,7 +23,7 @@ export const cssDef = (condidion?: string) => {
 
 export type Optional<T, K extends keyof T> = Pick<Partial<T>, K> & Omit<T, K>;
 
-export const fetchDirectly = async (url:string) => {
+export const fetchDirectly = async (url: string) => {
   console.log("Fetching directly", url);
   const res = await fetch(url);
   if (!res.ok) {
@@ -40,7 +40,7 @@ export const fetchFromProxy = async (url: string) => {
     headers: { Authorization: `bearer ${env.GCLOUD_KEY}` },
     body: JSON.stringify({ url }),
   });
-
+  console.log(res);
   if (!res.ok) {
     throw "Fetching data unsuccessful";
   }
