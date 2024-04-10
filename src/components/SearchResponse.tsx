@@ -18,8 +18,6 @@ export function SearchResponse({
 
   const inDB = api.koto.getList.useQuery().data;
 
-  const { mutate: addWord } = api.koto.addWord.useMutation();
-
   const data = search.data?.reduce<{
     in: typeof search.data;
     out: typeof search.data;
@@ -35,8 +33,6 @@ export function SearchResponse({
       out: [],
     },
   );
-
-  console.log(search, inDB, data);
 
   if (!search.isFetched && search.isFetching) return <>Fetching...</>;
 

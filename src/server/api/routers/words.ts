@@ -185,4 +185,7 @@ export const wordRouter = createTRPCRouter({
         .values({ lang: lang, word: word, meanings: meanings });
       return "OK";
     }),
+  getDBList: publicProcedure.query(async ({ ctx }) => {
+    return await ctx.db.query.kotobasWords.findMany({ limit: 10 });
+  }),
 });

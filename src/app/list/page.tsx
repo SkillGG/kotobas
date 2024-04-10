@@ -1,12 +1,15 @@
-import { db } from "@/server/db";
 import React from "react";
 import { ServerHTRText } from "@/components/serverHTR";
+import RefreshOnTime from "@/components/refresh";
+import { api } from "@/trpc/react";
 
-export default async function KotoList() {
-  const list = (await db.query.kotobasWords.findMany({ limit: 10 })).reverse();
-
+export default function KotoList() {
+  const list = api.koto.getDBList.useQuery(undefined, {
+    refetchInterval: 5000,
+  }).data;
   return (
     <div className="max-h-screen overflow-hidden">
+      <RefreshOnTime time={5000} />
       {list?.map((w) => {
         return (
           <div
