@@ -30,12 +30,8 @@
             [
                 {
                     "name": "git",
-                    "autoExecuteCommands": true,
-                    "icon": "git-commit",
+                    "icon": "git-branch",
                     "color": "terminal.ansiBrightBlue",
-                    "commands": [
-                        "cd kotobas"
-                    ],
                     "focus": false
                 },
                 {

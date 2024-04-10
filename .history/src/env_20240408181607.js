@@ -1,5 +1,5 @@
 import { createEnv } from "@t3-oss/env-nextjs";
-import z from "zod";
+import { z } from "zod";
 
 export const env = createEnv({
   /**
@@ -7,10 +7,7 @@ export const env = createEnv({
    * isn't built with invalid env vars.
    */
   server: {
-    DB_URL: z.string().url(),
-    GCLOUD_FETCH: z.string().url(),
-    GCLOUD_KEY: z.string(),
-    IS_REMOTE: z.literal("true").or(z.literal("false")),
+    DATABASE_URL: z.string().url(),
     NODE_ENV: z
       .enum(["development", "test", "production"])
       .default("development"),
@@ -30,10 +27,7 @@ export const env = createEnv({
    * middlewares) or client-side so we need to destruct manually.
    */
   runtimeEnv: {
-    DB_URL: process.env.DB_URL,
-    GCLOUD_FETCH: process.env.GCLOUD_FETCH,
-    GCLOUD_KEY: process.env.GCLOUD_KEY,
-    IS_REMOTE: process.env.IS_REMOTE,
+    DATABASE_URL: process.env.DATABASE_URL,
     NODE_ENV: process.env.NODE_ENV,
     // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
   },
