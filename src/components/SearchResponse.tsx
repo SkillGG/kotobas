@@ -38,7 +38,7 @@ export function SearchResponse({
 
   return (
     <div>
-      <div className="flex h-[calc(100vh_-_64px)] overflow-hidden">
+      <div className="flex overflow-hidden sm:h-[calc(100vh_-_64px)]">
         {!!data?.in?.length && (
           <div className="flex flex-1 flex-col overflow-hidden">
             <div className="border-b-2 text-center text-2xl">Added</div>
@@ -90,7 +90,7 @@ export function SearchResponse({
           </div>
         )}
         <div
-          className={`${data?.in.length ? "" : "mx-[auto] max-w-[50%]"} flex flex-1 flex-col overflow-hidden`}
+          className={`${data?.in.length ? "" : "mx-[auto] sm:max-w-[50%]"} flex flex-1 flex-col overflow-hidden`}
         >
           <div className="border-b-2 text-center text-2xl">Fetched</div>
           <div className="overflow-auto pb-2">

@@ -12,7 +12,7 @@ export default function KotoAdd() {
 
   return (
     <>
-      <div className="flex  justify-center">
+      <div className="flex justify-center">
         <label className="w-full max-w-64 cursor-pointer select-none py-2 text-center">
           <span
             className={`${jisho ? "bg-green-200" : "bg-blue-200"} rounded-lg px-2 py-1 text-black`}

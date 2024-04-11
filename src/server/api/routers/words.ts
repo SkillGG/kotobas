@@ -186,6 +186,7 @@ export const wordRouter = createTRPCRouter({
       return "OK";
     }),
   getDBList: publicProcedure.query(async ({ ctx }) => {
-    return await ctx.db.query.kotobasWords.findMany({ limit: 10 });
+    const listFromDB = await ctx.db.query.kotobasWords.findMany({ limit: 10 });
+    return listFromDB;
   }),
 });
