@@ -189,4 +189,8 @@ export const wordRouter = createTRPCRouter({
     const listFromDB = await ctx.db.query.kotobasWords.findMany({ limit: 10 });
     return listFromDB;
   }),
+  clear: publicProcedure.query(async ({ ctx }) => {
+    // eslint-disable-next-line drizzle/enforce-delete-with-where
+    await ctx.db.delete(kotobasWords);
+  }),
 });
