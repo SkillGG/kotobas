@@ -48,7 +48,6 @@ const parseJisho = async (
   };
 
   const parseConcept = (concept: typeof parsed) => {
-    console.log("parsing concept");
     const wordDiv = concept.querySelector(".concept_light-representation");
     if (!wordDiv) return void console.error("no wDiv"), null;
 
@@ -67,13 +66,13 @@ const parseJisho = async (
       .querySelectorAll("*")
       .reduce<({ type?: string; meaning?: string } | null)[]>((p, e) => {
         if (e.classList.contains("meaning-tags")) {
-          if (!e.textContent) return void console.log("no meaning-tags"), p;
+          if (!e.textContent) return void console.error("no meaning-tags"), p;
           return [...p, { type: e.textContent }];
         }
         if (e.classList.contains("meaning-wrapper")) {
           const meaning = e.querySelector(".meaning-meaning");
           if (!meaning?.textContent)
-            return void console.log("no meaning-meaning"), p;
+            return void console.error("no meaning-meaning"), p;
           if (p.length === 0)
             return [
               {
@@ -119,7 +118,6 @@ const parseJisho = async (
 
   if (exactMatch) {
     const matches = exactMatch.querySelectorAll(".concept_light");
-    console.log("exacts", matches.length);
     const mWords = matches.map((m) => m && parseConcept(m));
     for (const w of mWords) {
       if (w) words.push({ ...w, exactMatch: true, lang: "EN" });
@@ -127,7 +125,6 @@ const parseJisho = async (
   }
   if (probableBlocks) {
     const matches = probableBlocks.querySelectorAll(".concept_light");
-    console.log("close", matches.length);
     const mWords = matches.map((m) => m && parseConcept(m));
     for (const w of mWords) {
       if (w) words.push({ ...w, exactMatch: false, lang: "EN" });
@@ -137,9 +134,45 @@ const parseJisho = async (
   return words;
 };
 
-const parseWeblio = async (keyword: string): Promise<DictionaryEntry[]> => {
-  const site = fetch(`https://weblio.jp/content/${keyword}`);
-  void site.catch((_) => console.log(""));
+const parseWeblio = async (
+  keyword: string,
+  page = 0,
+): Promise<DictionaryEntry[]> => {
+  const url = `https://www.weblio.jp/content/${encodeURIComponent(keyword)}?page=${page}`;
+
+  const text = await fetchURL(url);
+
+  if (!text) return void console.error("JishoText not OK"), [];
+
+  const parsed = parse(text);
+
+  const content = parsed.querySelector("#cont");
+  if (!content) return void console.log("NO CONTENT!"), [];
+
+  const items = content
+    .querySelectorAll(".pbarT, .kijiWrp")
+    .reduce<{ bar?: typeof parsed; kiji?: typeof parsed }[]>((p, n, i, a) => {
+      if (a.length === 0) {
+        return [{ bar: n }];
+      } else {
+        const isBar = n.classList.contains("pbarT");
+        const lastEl = a[i - 1];
+        if (!lastEl) return isBar ? [{ bar: n }] : [{ kiji: n }];
+        const lastBar = lastEl.classList.contains("pbarT");
+        if (isBar) {
+          return [...p, { bar: n }];
+        } else if (lastBar) {
+          const lastEl = p[p.length - 1];
+          if (lastEl) lastEl.kiji = n;
+        } else {
+          return [...p, { kiji: n }];
+        }
+      }
+      return p;
+    }, []);
+
+    
+
   return [];
 };
 
@@ -157,7 +190,7 @@ export const wordRouter = createTRPCRouter({
   scrapLists: publicProcedure
     .input(z.object({ jisho: z.boolean(), keyword: z.string() }))
     .query(async ({ input: { jisho, keyword } }) => {
-      console.log("SCRAPPING");
+      console.log("Searching in ", jisho ? "jisho" : "weblio", "for ", keyword);
       const words = jisho
         ? await parseJisho(keyword)
         : await parseWeblio(keyword);
