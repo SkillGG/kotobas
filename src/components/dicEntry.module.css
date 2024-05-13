@@ -1,21 +1,19 @@
 .high {
-  color: red;
   @apply px-[1px];
-  border-top: 1px solid white;
+  border-top: 2px solid #fffa;
 }
 
 .high + .low {
-  border-left: 1px solid white;
+  border-left: 2px solid #fffa;
 }
 
 .low + .high {
-  border-left: 1px solid white;
+  border-left: 2px solid #fffa;
 }
 
 .low {
-  @apply px-[1px];
-  border-bottom: 1px solid white;
-  color: blue;
+  @apply px-[2px];
+  border-bottom: 2px solid #fffa;
 }
 
 .empty {
