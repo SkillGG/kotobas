@@ -10,6 +10,7 @@ export const kotobasWords = pgTable(
     word: text("word").notNull(),
     meanings: text("meanings").array(),
     examples: text("examples").array(),
+    pitch: text("pitch").array(),
   },
   (table) => {
     return {

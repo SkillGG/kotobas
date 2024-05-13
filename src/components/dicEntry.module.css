@@ -1,0 +1,23 @@
+.high {
+  color: red;
+  @apply px-[1px];
+  border-top: 1px solid white;
+}
+
+.high + .low {
+  border-left: 1px solid white;
+}
+
+.low + .high {
+  border-left: 1px solid white;
+}
+
+.low {
+  @apply px-[1px];
+  border-bottom: 1px solid white;
+  color: blue;
+}
+
+.empty {
+  padding: 0;
+}
