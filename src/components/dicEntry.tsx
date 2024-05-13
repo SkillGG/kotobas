@@ -1,5 +1,5 @@
 import { type DictionaryEntry } from "@/utils";
-import { type ComponentPropsWithoutRef, type PropsWithoutRef } from "react";
+import { type ComponentPropsWithoutRef } from "react";
 import { HTRText } from "./htrLabel";
 
 import css from "./dicEntry.module.css";

@@ -2,12 +2,7 @@ import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
 import { kotobasWords } from "@/server/db/schema";
 import { parseJisho } from "./jisho";
-import {
-  InferInsertModel,
-  InferModelFromColumns,
-  InferSelectModel,
-  gt,
-} from "drizzle-orm";
+import { gt } from "drizzle-orm";
 import { parseWiktionary } from "./wiktionary";
 import { Dictionaries, DictionaryEntry } from "@/utils";
 import { parseJotoba } from "./jotoba";
@@ -60,14 +55,12 @@ export const wordRouter = createTRPCRouter({
   addWord: publicProcedure
     .input(DictionaryEntry)
     .mutation(async ({ ctx, input: { lang, meanings, word, pitch } }) => {
-      await ctx.db
-        .insert(kotobasWords)
-        .values({
-          lang: lang,
-          word: word,
-          meanings: meanings,
-          pitch: pitch?.map((p) => `(${p.part})${p.high ? "+" : "-"}`),
-        });
+      await ctx.db.insert(kotobasWords).values({
+        lang: lang,
+        word: word,
+        meanings: meanings,
+        pitch: pitch?.map((p) => `(${p.part})${p.high ? "+" : "-"}`),
+      });
       return "OK";
     }),
   getDBList: publicProcedure.query(async ({ ctx }) => {

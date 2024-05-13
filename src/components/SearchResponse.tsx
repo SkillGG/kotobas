@@ -1,5 +1,4 @@
 import React from "react";
-import { HTRText } from "@/components/htrLabel";
 import { api } from "@/trpc/react";
 import { type Dictionary } from "@/utils";
 import DictionaryEntryView from "./dicEntry";

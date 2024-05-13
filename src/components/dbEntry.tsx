@@ -23,7 +23,7 @@ export default function DatabaseEntry({
           {entry.pitch.map((txt) => {
             const exec = /\((.*?)\)(\+|\-)/.exec(txt);
             if (!exec) return null;
-            const [_, part, highStr] = exec;
+            const [, part, highStr] = exec;
             if (typeof part !== "string" || typeof highStr !== "string")
               return null;
             const high = highStr === "+";

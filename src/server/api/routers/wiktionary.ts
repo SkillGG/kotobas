@@ -1,6 +1,5 @@
-import parse from "node-html-parser";
 import { type DictionaryEntry, fetchDirectly } from "@/utils";
-import { isWikiData, isWikiParsedSections } from "./wiktionary.guard";
+import {  isWikiParsedSections } from "./wiktionary.guard";
 
 /** @see {isWikiParsedSections} ts-auto-guard:type-guard */
 export type WikiParsedSections = {
@@ -72,10 +71,8 @@ export const parseWiktionary = (
 
     // console.log(subsections);
 
-    const sectionData = [];
-
     for (const section of subsections) {
-      const data = await fetchDirectly(japSectionURL(section.id + 1), true);
+      await fetchDirectly(japSectionURL(section.id + 1), true);
       // if(!isWikiData(data))
       // console.log(section, data);
     }

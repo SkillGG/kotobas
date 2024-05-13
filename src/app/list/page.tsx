@@ -2,7 +2,6 @@
 
 import React from "react";
 import { api } from "@/trpc/react";
-import { HTRText } from "@/components/htrLabel";
 import DictionaryEntryView from "@/components/dbEntry";
 
 export default function KotoList() {

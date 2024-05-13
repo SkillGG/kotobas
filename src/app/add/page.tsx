@@ -2,7 +2,7 @@
 
 import { SearchResponse } from "@/components/SearchResponse";
 import { Dictionaries, dictionaryName, type Dictionary } from "@/utils";
-import { useEffect, useRef, useState } from "react";
+import {  useRef, useState } from "react";
 
 export default function KotoAdd() {
   const [dictionary, setDictionary] = useState<Dictionary>("jotoba");

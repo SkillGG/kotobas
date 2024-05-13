@@ -1,4 +1,4 @@
-import { type DictionaryEntry, fetchDirectly, fetchURL } from "@/utils";
+import { type DictionaryEntry, fetchDirectly } from "@/utils";
 
 /** @see {isJotobaData} ts-auto-guard:type-guard */
 export type JotobaData = {
