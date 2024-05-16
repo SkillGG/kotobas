@@ -70,6 +70,7 @@ export const wordRouter = createTRPCRouter({
         lang: kotobasWords.lang,
         meanings: kotobasWords.meanings,
         word: kotobasWords.word,
+        pitch: kotobasWords.pitch,
       })
       .from(kotobasWords)
       .orderBy(desc(kotobasWords.id))
