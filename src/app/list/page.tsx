@@ -9,13 +9,9 @@ export default function KotoList() {
     refetchInterval: 5000,
   }).data;
 
-  const sortedList = [...(list ?? [])]?.sort((p, n) => {
-    return n.id - p.id;
-  });
-
   return (
     <div className="max-h-screen overflow-hidden">
-      {sortedList?.map((w) => {
+      {list?.map((w) => {
         return <DictionaryEntryView entry={w} key={`${w.lang}_${w.word}`} />;
       })}
     </div>

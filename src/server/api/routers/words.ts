@@ -2,7 +2,7 @@ import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
 import { kotobasWords } from "@/server/db/schema";
 import { parseJisho } from "./jisho";
-import { gt } from "drizzle-orm";
+import { desc, gt } from "drizzle-orm";
 import { parseWiktionary } from "./wiktionary";
 import { Dictionaries, DictionaryEntry } from "@/utils";
 import { parseJotoba } from "./jotoba";
@@ -15,7 +15,8 @@ export const wordRouter = createTRPCRouter({
         meanings: kotobasWords.meanings,
         word: kotobasWords.word,
       })
-      .from(kotobasWords);
+      .from(kotobasWords)
+      .orderBy(desc(kotobasWords.id));
     return novels;
   }),
   scrapLists: publicProcedure
@@ -64,9 +65,15 @@ export const wordRouter = createTRPCRouter({
       return "OK";
     }),
   getDBList: publicProcedure.query(async ({ ctx }) => {
-    const listFromDB = await ctx.db.query.kotobasWords.findMany({
-      limit: 10,
-    });
+    const listFromDB = await ctx.db
+      .select({
+        lang: kotobasWords.lang,
+        meanings: kotobasWords.meanings,
+        word: kotobasWords.word,
+      })
+      .from(kotobasWords)
+      .orderBy(desc(kotobasWords.id))
+      .limit(10);
     return listFromDB;
   }),
   clear: publicProcedure.query(async ({ ctx }) => {

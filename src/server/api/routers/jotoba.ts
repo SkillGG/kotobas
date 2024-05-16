@@ -1,6 +1,5 @@
 import { type DictionaryEntry, fetchDirectly } from "@/utils";
 
-/** @see {isJotobaData} ts-auto-guard:type-guard */
 export type JotobaData = {
   words: {
     reading: {
@@ -11,7 +10,7 @@ export type JotobaData = {
     common: boolean;
     senses: {
       glosses: string[];
-      pos?: (string | Record<string, string>)[];
+      pos?: (string | Record<string, string | string[]>)[];
       language?:
         | "English"
         | "German"
@@ -31,6 +30,32 @@ export type JotobaData = {
     }[];
   }[];
 };
+
+const posTypes = {
+  "Keiyoushi Adjective": " 形容詞",
+  "Na Adjective": "形容動詞",
+  Verb: "動詞",
+  Noun: "名詞",
+};
+
+const verbTypes = {
+  A: "あ",
+  I: "い",
+  U: "う",
+  Ku: "く",
+  Su: "す",
+  Tsu: "つ",
+  Fu: "ふ",
+  Ru: "る",
+  Na: "な",
+  Nu: "ぬ",
+  No: "の",
+};
+
+const deromanize = (s: string): string =>
+  Object.entries(verbTypes).find(([n]) => n === s)?.[1] ??
+  Object.entries(posTypes).find(([n]) => n === s)?.[1] ??
+  (s.split(" ").length > 1 ? s.split(" ").map(deromanize).join(" ") : s);
 
 export const parseJotoba = async (
   keyword: string,
@@ -61,9 +86,7 @@ export const parseJotoba = async (
   }: JotobaData["words"][number]["reading"]): string => {
     return (
       furigana?.replace(/\[(.*?)\]/g, (m, g) => {
-        console.log("m", m, "g", g);
         const data = m.substring(1, m.length - 1).split("|");
-        console.log(data);
         const [clump, ...kanjis] = data;
         return kanjis.length < (clump?.length ?? 0)
           ? `[r]${clump}[rt]${kanjis.join("")}[/rt][/r]`
@@ -78,18 +101,32 @@ export const parseJotoba = async (
 
   for (const word of json.words) {
     const reading = readingToHSR(word.reading);
-    console.log(reading);
+    // console.log(word, reading);
     words.push({
       word: reading,
-      meanings: word.senses.reduce<string[]>((p, sense) => {
+      meanings: word.senses.reduce<string[]>((words, sense) => {
+        console.log(sense);
         return [
-          ...p,
+          ...words,
           `${sense.pos
-            ?.map((s) =>
-              typeof s === "string"
-                ? s
-                : Object.entries(s)
-                    .map(([p, v]) => (v === "Normal" ? p : `${v} ${p}`))
+            ?.map((position) =>
+              typeof position === "string"
+                ? deromanize(position)
+                : Object.entries(position)
+                    .map(([posName, posValue]) =>
+                      posValue === "Normal"
+                        ? deromanize(posName)
+                        : typeof posValue === "string"
+                          ? `${deromanize(`${posValue} ${posName}`)}`
+                          : `${Object.values(posValue)
+                              .map((pValue) => {
+                                console.log(posName, pValue);
+                                return posName === "Verb"
+                                  ? `~${deromanize(pValue)}`
+                                  : `${posName}`;
+                              })
+                              .join(",")} ${posName}`,
+                    )
                     .join(","),
             )
             .join(", ")}\n${sense.glosses.join(", ")}`,
